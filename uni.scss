@@ -1,0 +1,12 @@
+/*每个页面公共css */
+@import '@/uni_modules/uni-scss/variables.scss';
+@import '@/uni_modules/uni-scss/index.scss';
+
+$uni-primary: #ffd700;
+
+@import '@/themes/variables.scss';
+@import '@/themes/reset-uni-ui.scss';
+@import '@/themes/reset-uni.scss';
+/* #ifndef APP-NVUE */
+@import '@/static/customicons.scss';
+/* #endif */

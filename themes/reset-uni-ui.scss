@@ -1,0 +1,25 @@
+.uni-datetime-picker--btn {
+    background-color: $uni-primary !important;
+}
+
+.uni-calendar {
+    .uni-calendar-item__weeks-box-text {
+        color: $uni-base-color !important;
+    }
+
+    .uni-calendar-item--disable {
+        .uni-calendar-item__weeks-box-text-disable {
+            color: #d1d1d1 !important;
+        }
+    }
+
+    .uni-calendar-item--checked,
+    .uni-calendar-item--before-checked,
+    .uni-calendar-item--after-checked {
+        background-color: $uni-primary !important;
+
+        .uni-calendar-item--checked-text {
+            color: #fff !important;
+        }
+    }
+}

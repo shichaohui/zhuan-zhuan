@@ -1,0 +1,51 @@
+{
+    "bsonType": "object",
+    "required": [],
+    "permission": {
+        "read": true,
+        "create": false,
+        "update": false,
+        "delete": false
+    },
+    "properties": {
+        "_id": {
+            "description": "ID，系统自动生成"
+        },
+        "date": {
+            "description": "日期",
+            "bsonType": "date",
+            "required": true
+        },
+        "height": {
+            "description": "身高（cm）",
+            "bsonType": "double",
+            "required": true
+        },
+        "weight": {
+            "description": "体重（kg）",
+            "bsonType": "double",
+            "required": true
+        },
+        "description": {
+            "description": "记录一下这段时间的状态吧",
+            "bsonType": "string",
+            "required": false
+        },
+        "photoList": {
+            "description": "照片列表",
+            "bsonType": "array",
+            "arrayType": "string",
+            "required": true
+        },
+        "createdTime": {
+            "description": "该条数据的创建时间",
+            "bsonType": "date",
+            "required": true
+        },
+        "updatedTime": {
+            "description": "该条数据的最后更新时间",
+            "bsonType": "date",
+            "required": true
+        }
+    }
+}
