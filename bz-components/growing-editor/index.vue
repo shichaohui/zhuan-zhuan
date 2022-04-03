@@ -34,6 +34,7 @@
             <uni-file-picker
                 :limit="99"
                 v-model="form.photoList"
+                @delete="handleDeletePhoto"
                 @success="handleUploadPhotosSuccess"
             />
         </view>
@@ -48,12 +49,17 @@ import abandonPhoto from '@/helpers/abandonPhoto'
 import sleep from '@/utils/sleep'
 import toast from '@/utils/toast'
 
+interface Photo {
+    url: string
+    fileID: string
+}
+
 interface Form {
     date: string
     height: number
     weight: number
     description: string
-    photoList: any[]
+    photoList: Photo[]
 }
 
 interface Props {
@@ -73,8 +79,14 @@ const { initForm, autoNavigateBack, submit } = withDefaults(defineProps<Props>()
 // 表单
 const form = reactive({ ...initForm })
 
+// 移除照片
+function handleDeletePhoto({ tempFile }) {
+    console.log(tempFile)
+    abandonPhoto.add([tempFile.fileID])
+}
+
 // 上传照片成功
-async function handleUploadPhotosSuccess({ tempFiles }) {
+function handleUploadPhotosSuccess({ tempFiles }) {
     /*
      * 加入弃用列表。成长记录提交成功后需要从弃用列表移除。
      * 这样处理的好处是，如果成长记录提交失败，可以将照片弃用，节省服务器空间。

@@ -1,8 +1,8 @@
 <template>
     <GrowingEditor v-if="showEditor" :initForm="initForm" :submit="handleSubmitClick" />
     <view v-else>
-        <uni-calendar :insert="true" @change="handleSelectDate" />
         <view class="dateTips">请选择要编辑的日期</view>
+        <uni-calendar :insert="true" @change="handleSelectDate" />
     </view>
 </template>
 
@@ -63,5 +63,6 @@ async function handleSubmitClick(form) {
 .dateTips {
     padding: $page-spacing;
     text-align: center;
+    border-bottom: 1upx solid $uni-border-4;
 }
 </style>
