@@ -1,20 +1,24 @@
 <template>
-    <GrowingEditor v-if="showEditor" :initForm="initForm" :submit="handleSubmitClick" />
-    <view v-else>
+    <view v-if="show.calendar">
         <view class="dateTips">请选择要编辑的日期</view>
         <uni-calendar :insert="true" @change="handleSelectDate" />
     </view>
+    <GrowingEditor v-if="show.editor" :initForm="initForm" :submit="handleSubmitClick" />
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import GrowingEditor from '@/bz-components/growing-editor'
 import cloudApi from '@/helpers/cloudApi'
 import event from '@/helpers/event'
 import toast from '@/utils/toast'
 
-// 显示编辑器
-const showEditor = ref(false)
+// 组件可见性
+const show = reactive({
+    calendar: false,
+    editor: false,
+})
 
 // 表单信息
 const initForm = reactive({
@@ -23,6 +27,16 @@ const initForm = reactive({
     weight: '',
     description: '',
     photoList: [],
+})
+
+// 页面加载成功
+onLoad(options => {
+    const { date } = options
+    if (!!date) {
+        handleSelectDate({ fulldate: date })
+    } else {
+        show.calendar = true
+    }
 })
 
 // 选择日期
@@ -38,8 +52,8 @@ async function handleSelectDate(date) {
             url: item,
             fileID: item,
         }))
-
-        showEditor.value = true
+        show.editor = true
+        show.calendar = false
     } catch (err) {
         console.log(err)
         toast.showError(err.message)

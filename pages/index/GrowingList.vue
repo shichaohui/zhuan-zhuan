@@ -2,9 +2,12 @@
     <uni-list class="growingList" :border="false">
         <uni-list-item v-for="(growing, growingIndex) in growingList" :key="growing.date">
             <template v-slot:header>
-                <view class="growingHeader" @click="handleClickGrowingHeader(growingIndex)">
+                <view class="growingHeader" @click="handleViewGrowing(growingIndex)">
                     <view class="date">{{ growing.date }}</view>
                     <view class="baseInfo">{{ `${growing.height}cm / ${growing.weight}kg` }}</view>
+                    <view class="edit" @click.native.stop="handleEditGrowing(growingIndex)">
+                        <uni-icons type="compose" />
+                    </view>
                 </view>
             </template>
             <template v-slot:body>
@@ -225,12 +228,23 @@ function previewPhoto(growingIndex, photoIndex) {
 }
 
 /**
- * 点击成长记录组件头部
+ * 查看成长记录
  * @param {Number} growingIndex 成长记录索引
  */
-function handleClickGrowingHeader(growingIndex) {
+function handleViewGrowing(growingIndex) {
     description.value = growingList[growingIndex].description || '无'
     descriptionPopupRef.value.open()
+}
+
+/**
+ * 编辑成长记录
+ * @param {Number} growingIndex 成长记录索引
+ */
+function handleEditGrowing(growingIndex) {
+    const { date } = growingList[growingIndex]
+    uni.navigateTo({
+        url: `/pages/edit/index?date=${date}`,
+    })
 }
 
 // 对外暴露接口
@@ -245,28 +259,23 @@ defineExpose({
 
 .growingHeader {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-end;
 
     .date {
         display: flex;
         align-items: center;
         font-size: 32upx;
-
-        &::before {
-            content: '';
-            display: block;
-            width: 6upx;
-            height: 32upx;
-            border-radius: 6upx;
-            background: $uni-primary;
-            margin-right: 10upx;
-        }
     }
 
     .baseInfo {
         font-size: 24upx;
         color: $uni-base-color;
+        margin-left: 10upx;
+    }
+
+    .edit {
+        margin-left: 10upx;
+        margin-bottom: -4upx;
     }
 }
 
