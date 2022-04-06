@@ -19,7 +19,7 @@ function buildResponse(code, message, data) {
  * 构建成功响应内容
  * @param {Object} data 数据
  */
-function buildSuccess(data) {
+function buildSuccess(data = null) {
     return buildResponse(CODE_SUCCESS, "", data)
 }
 

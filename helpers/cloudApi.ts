@@ -101,10 +101,19 @@ async function getGrowingBaseInfoList(query: {
     return await request('getGrowingBaseInfoList', query)
 }
 
+/**
+ * 验证密码
+ * @param {String} 密码
+ */
+async function verifyPassword(password: string): boolean {
+    return await request('verifyPassword', { password })
+}
+
 export default {
     insertGrowing,
     getGrowing,
     updateGrowing,
     getGrowingList,
     getGrowingBaseInfoList,
+    verifyPassword,
 }

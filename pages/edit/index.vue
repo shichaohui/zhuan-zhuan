@@ -1,24 +1,35 @@
 <template>
-    <view v-if="show.calendar">
-        <view class="dateTips">请选择要编辑的日期</view>
-        <uni-calendar :insert="true" @change="handleSelectDate" />
-    </view>
-    <GrowingEditor v-if="show.editor" :initForm="initForm" :submit="handleSubmitClick" />
+    <VerifyPasswordDialog v-if="!isVerifiedPassword" />
+    <template v-else>
+        <view v-if="show.calendar">
+            <view class="dateTips">请选择要编辑的日期</view>
+            <uni-calendar :insert="true" @change="handleSelectDate" />
+        </view>
+        <GrowingEditor v-if="show.editor" :initForm="initForm" :submit="handleSubmitClick" />
+    </template>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import GrowingEditor from '@/bz-components/growing-editor'
+import GrowingEditor from '@/bz-components/GrowingEditor'
+import VerifyPasswordDialog from '@/bz-components/VerifyPasswordDialog'
 import cloudApi from '@/helpers/cloudApi'
 import event from '@/helpers/event'
+import verifiedPassword from '@/helpers/verifiedPassword'
 import toast from '@/utils/toast'
+
+// 是否已验证密码
+const isVerifiedPassword = verifiedPassword.useVerifiedPassword()
 
 // 组件可见性
 const show = reactive({
     calendar: false,
     editor: false,
 })
+
+// 选择的日期
+const initDateRef = ref()
 
 // 表单信息
 const initForm = reactive({
@@ -29,15 +40,23 @@ const initForm = reactive({
     photoList: [],
 })
 
+// 监听密码验证
+watch(isVerifiedPassword, () => init())
+
 // 页面加载成功
 onLoad(options => {
     const { date } = options
-    if (!!date) {
-        handleSelectDate({ fulldate: date })
-    } else {
-        show.calendar = true
-    }
+    show.calendar = !date
+    initDateRef.value = date
+    init()
 })
+
+// 初始化
+function init() {
+    if (isVerifiedPassword && initDateRef.value) {
+        handleSelectDate({ fulldate: initDateRef.value })
+    }
+}
 
 // 选择日期
 async function handleSelectDate(date) {
