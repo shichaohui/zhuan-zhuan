@@ -30,8 +30,9 @@
         "navigationBarTitleText": "转转成长记",
         "navigationBarBackgroundColor": "#ffd700",
         "backgroundColor": "#f8f8f8",
-        "app-plus": {
-            "background": "#f8f8f8"
+        "pullToRefresh": {
+            "style": "circle",
+            "color": "#ffd700"
         }
     }
 }
