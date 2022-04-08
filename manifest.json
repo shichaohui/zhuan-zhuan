@@ -14,7 +14,7 @@
         "nvueLaunchMode" : "fast",
         "splashscreen" : {
             "alwaysShowBeforeRender" : true,
-            "waiting" : true,
+            "waiting" : false,
             "autoclose" : true,
             "delay" : 0
         },
@@ -77,6 +77,12 @@
                         "spotlight@2x" : "unpackage/res/icons/80x80.png",
                         "spotlight@3x" : "unpackage/res/icons/120x120.png"
                     }
+                }
+            },
+            "splashscreen" : {
+                "androidStyle" : "default",
+                "android" : {
+                    "xxhdpi" : "./unpackage/res/images/splash.9.png"
                 }
             }
         }

@@ -3,6 +3,7 @@ node_modules
 unpackage/cache
 unpackage/dist
 unpackage/release
+unpackage/resources
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
