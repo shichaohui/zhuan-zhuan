@@ -31,3 +31,11 @@
 .uni-button-color {
     color: $uni-primary !important;
 }
+
+.uni-fab__content {
+    border: 1upx solid $uni-primary !important;
+}
+
+.uni-fab__content--other-platform {
+    border-width: 1upx !important;
+}
