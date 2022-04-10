@@ -1,35 +1,38 @@
 <template>
     <view class="page minFullPage homePage">
         <view class="filter"><uni-datetime-picker type="daterange" @change="filter" /></view>
-        <GrowingList ref="growingListRef" class="growingList" />
+        <GrowingList v-if="data.growingListVisible" ref="growingListRef" class="growingList" />
         <HomeFab />
     </view>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import { onReady, onShow } from '@dcloudio/uni-app'
 import abandonPhoto from '@/helpers/abandonPhoto'
 import HomeFab from './HomeFab.vue'
 import GrowingList from './GrowingList.vue'
 
-/**
- * 列表组件引用
- */
+// 模板数据
+const data = reactive({
+    growingListVisible: false,
+})
+
+// 列表组件引用
 const growingListRef = ref(null)
 
-/**
- * 页面展示
- */
+// 页面首次显示
+onReady(() => {
+    data.growingListVisible = true
+})
+
+// 页面展示
 onShow(async () => {
     // 提交弃用照片
     abandonPhoto.submit()
 })
 
-/**
- * 筛选
- * @param {[String, String]} dateRange 日期范围
- */
+// 筛选
 function filter(dateRange) {
     growingListRef.value.filter(dateRange)
 }
