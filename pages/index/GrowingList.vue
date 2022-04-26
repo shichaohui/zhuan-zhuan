@@ -1,29 +1,29 @@
 <template>
     <uni-list class="growingList" :border="false">
-        <uni-list-item v-for="(growing, growingIndex) in growingList" :key="growing.date">
-            <template v-slot:header>
-                <view class="growingHeader" @click="handleViewGrowing(growingIndex)">
-                    <view class="date">{{ growing.date }}</view>
-                    <view class="baseInfo">{{ `${growing.height}cm / ${growing.weight}kg` }}</view>
-                    <view class="edit" @click.native.stop="handleEditGrowing(growingIndex)">
-                        <uni-icons type="compose" />
-                    </view>
+        <view
+            class="growingItem"
+            v-for="(growing, growingIndex) in growingList"
+            :key="growing.date"
+        >
+            <view class="growingHeader" @click="handleViewGrowing(growingIndex)">
+                <view class="date">{{ growing.date }}</view>
+                <view class="baseInfo">{{ `${growing.height}cm / ${growing.weight}kg` }}</view>
+                <view class="edit" @click.native.stop="handleEditGrowing(growingIndex)">
+                    <uni-icons type="compose" />
                 </view>
-            </template>
-            <template v-slot:body>
-                <uni-grid class="photoList" :column="gridColumn" :showBorder="false">
-                    <uni-grid-item v-for="(photo, photoIndex) in growing.photoList" :key="photo">
-                        <image
-                            class="photo"
-                            lazy-load
-                            mode="aspectFill"
-                            :src="thumbnailPhoto(photo)"
-                            @click="previewPhoto(growingIndex, photoIndex)"
-                        />
-                    </uni-grid-item>
-                </uni-grid>
-            </template>
-        </uni-list-item>
+            </view>
+            <uni-grid class="growingPhotoList" :column="gridColumn" :showBorder="false">
+                <uni-grid-item v-for="(photo, photoIndex) in growing.photoList" :key="photo">
+                    <image
+                        class="photo"
+                        lazy-load
+                        mode="aspectFill"
+                        :src="thumbnailPhoto(photo)"
+                        @click="previewPhoto(growingIndex, photoIndex)"
+                    />
+                </uni-grid-item>
+            </uni-grid>
+        </view>
         <uni-load-more
             v-if="growingListQuery.pageNo > 1 || loadStatus.moreType !== LoadMoreType.Idle"
             :status="loadStatus.moreType"
@@ -257,6 +257,10 @@ defineExpose({
 .growingList {
 }
 
+.growingItem {
+    padding: 20upx;
+}
+
 .growingHeader {
     display: flex;
     align-items: flex-end;
@@ -279,12 +283,20 @@ defineExpose({
     }
 }
 
-.photoList {
-    margin-top: 20upx;
+.growingPhotoList {
+    $photo-spacing: 10upx;
+
+    width: calc(100% + $photo-spacing * 2);
+    margin: -$photo-spacing;
+    margin-top: 10upx;
 
     .photo {
         width: 100%;
         height: 100%;
+        padding: $photo-spacing;
+        box-sizing: border-box;
+        overflow: hidden;
+        border-radius: 10upx;
     }
 }
 
@@ -295,57 +307,5 @@ defineExpose({
     border-radius: 20upx;
     padding: 20upx;
     overflow: auto;
-}
-</style>
-
-<style lang="scss">
-.uni-list {
-    .uni-list-item {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-    }
-
-    .uni-list--border {
-        display: none !important;
-    }
-
-    .uni-list-item__container {
-        display: block !important;
-        width: 100%;
-        box-sizing: border-box;
-    }
-}
-
-.uni-grid {
-    $item-spacing: 20upx;
-
-    width: calc(100% + $item-spacing);
-    margin-top: -$item-spacing;
-    margin-left: -$item-spacing;
-
-    .uni-grid-item {
-        position: relative;
-        width: calc(
-            (100% - #{$item-spacing} * #{v-bind(gridColumn)}) / #{v-bind(gridColumn)}
-        ) !important;
-        height: unset !important;
-        margin-left: $item-spacing;
-        margin-top: $item-spacing;
-
-        &::before {
-            content: '';
-            width: 100%;
-            padding-top: 100%;
-        }
-    }
-
-    .uni-grid-item__box {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
 }
 </style>
