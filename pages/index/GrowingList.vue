@@ -274,11 +274,11 @@ defineExpose({
     .baseInfo {
         font-size: 24upx;
         color: $uni-base-color;
-        margin-left: 10upx;
+        margin-left: 20upx;
     }
 
     .edit {
-        margin-left: 10upx;
+        margin-left: 20upx;
         margin-bottom: -4upx;
     }
 }
