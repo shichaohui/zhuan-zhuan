@@ -1,6 +1,6 @@
 <template>
-	<view class="uni-file-picker__container">
-		<view class="file-picker__box" v-for="(item,index) in filesList" :key="index" :style="boxStyle">
+	<view class="uni-file-picker__container" ref="imageListEl">
+		<view class="file-picker__box" v-for="(item,index) in filesList" :key="item.key" :style="boxStyle" ref="imageElList" @touchmove="handleDragImage(index, $event)" @touchend="handleDragImageEnd">
 			<view class="file-picker__box-content" :style="borderStyle">
 				<image class="file-image" :src="item.url" mode="aspectFill" @click.stop="prviewImage(item,index)"></image>
 				<view v-if="delIcon && !readonly" class="icon-del-box" @click.stop="delFile(index)">
@@ -30,7 +30,7 @@
 <script>
 	export default {
 		name: "uploadImage",
-		emits:['uploadFiles','choose','delFile'],
+		emits:['uploadFiles','choose','delFile', 'sort'],
 		props: {
 			filesList: {
 				type: Array,
@@ -69,6 +69,13 @@
 				default:false
 			}
 		},
+        data() {
+            return {
+                dragImageIndex: -1,
+                targetImageIndex: -1,
+                copyDragImageEl: -1
+            }
+        },
 		computed: {
 			styles() {
 				let styles = {
@@ -174,7 +181,36 @@
 					}
 				}
 				return value
-			}
+			},
+            handleDragImage(index, e) {
+                const { pageX, pageY, clientX, clientY } = e.touches[0]
+                const targetIndex = this.$refs.imageElList.findIndex((item) => {
+                    const { offsetLeft, offsetTop, clientWidth, clientHeight} = item.$el
+                    return (pageX >= offsetLeft && pageX <= offsetLeft + clientWidth) && (pageY >= offsetTop && pageY <= offsetTop+ clientHeight)
+                })
+                if (targetIndex < 0) {
+                    return
+                }
+                if (this.dragImageIndex < 0) {
+                    this.dragImageIndex = targetIndex
+                }
+                this.targetImageIndex = targetIndex
+            },
+            handleDragImageEnd() {
+                if (this.dragImageIndex === this.targetImageIndex) {
+                    this.resetDragImage()
+                    return
+                }
+                const imageEl = this.$refs.imageElList[this.dragImageIndex]
+                this.$refs.imageElList.splice(this.dragImageIndex, 1)
+                this.$refs.imageElList.splice(this.targetImageIndex, 0, imageEl)
+                this.$emit("sort", this.dragImageIndex, this.targetImageIndex)
+                this.resetDragImage()
+            },
+            resetDragImage() {
+                this.dragImageIndex = -1
+                this.targetImageIndex = -1
+            }
 		}
 	}
 </script>
@@ -198,6 +234,7 @@
 		/* #ifndef APP-NVUE */
 		box-sizing: border-box;
 		/* #endif */
+        transition: all 200ms;
 	}
 
 	.file-picker__box-content {

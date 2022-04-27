@@ -6,7 +6,7 @@
 		</view>
 		<upload-image v-if="fileMediatype === 'image' && showType === 'grid'" :readonly="readonly"
 			:image-styles="imageStyles" :files-list="filesList" :limit="limitLength" :disablePreview="disablePreview"
-			:delIcon="delIcon" @uploadFiles="uploadFiles" @choose="choose" @delFile="delFile">
+			:delIcon="delIcon" @uploadFiles="uploadFiles" @choose="choose" @delFile="delFile" @sort="sort">
 			<slot>
 				<view class="is-add">
 					<view class="icon-add"></view>
@@ -212,6 +212,9 @@
 			filesList() {
 				let files = []
 				this.files.forEach(v => {
+                    if (!v.key) {
+                        v.key = Math.random().toString().replace(".", "")
+                    }
 					files.push(v)
 				})
 				return files
@@ -520,6 +523,12 @@
 					this.setEmit()
 				})
 			},
+            
+            sort(index, targetIndex) {
+                const file = this.files[index]
+                this.files.splice(index, 1)
+                this.files.splice(targetIndex, 0, file)
+            },
 
 			/**
 			 * 获取文件名和后缀
