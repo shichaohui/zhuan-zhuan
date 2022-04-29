@@ -1,6 +1,7 @@
 <template>
 	<view class="uni-file-picker__container" ref="imageListEl">
-		<view class="file-picker__box" v-for="(item,index) in filesList" :key="item.key" :style="boxStyle" ref="imageElList" @touchmove="handleDragImage(index, $event)" @touchend="handleDragImageEnd">
+		<view class="file-picker__box" v-for="(item,index) in filesList" :key="item.key" :style="boxStyle" ref="imageElList"
+            @touchstart="handleDragImageStart" @touchmove="handleDragImageMove(index, $event)" @touchend="handleDragImageEnd">
 			<view class="file-picker__box-content" :style="borderStyle">
 				<image class="file-image" :src="item.url" mode="aspectFill" @click.stop="prviewImage(item,index)"></image>
 				<view v-if="delIcon && !readonly" class="icon-del-box" @click.stop="delFile(index)">
@@ -71,6 +72,8 @@
 		},
         data() {
             return {
+                dragStartTimer: null,
+                isDragging: false,
                 dragImageIndex: -1,
                 targetImageIndex: -1,
                 copyDragImageEl: -1
@@ -182,8 +185,19 @@
 				}
 				return value
 			},
-            handleDragImage(index, e) {
-                const { pageX, pageY, clientX, clientY } = e.touches[0]
+            handleDragImageStart() {
+                this.dragStartTimer = setTimeout(() => {
+                    this.isDragging = true
+                }, 200)
+            },
+            handleDragImageMove(index, event) {
+                if(!this.isDragging) {
+                    this.clearDragStartTimer()
+                    return
+                }
+                event.stopPropagation();
+                event.preventDefault();
+                const { pageX, pageY, clientX, clientY } = event.touches[0]
                 const targetIndex = this.$refs.imageElList.findIndex((item) => {
                     const { offsetLeft, offsetTop, clientWidth, clientHeight} = item.$el
                     return (pageX >= offsetLeft && pageX <= offsetLeft + clientWidth) && (pageY >= offsetTop && pageY <= offsetTop+ clientHeight)
@@ -197,6 +211,11 @@
                 this.targetImageIndex = targetIndex
             },
             handleDragImageEnd() {
+                if(!this.isDragging) {
+                    this.clearDragStartTimer()
+                    return
+                }
+                this.isDragging = false
                 if (this.dragImageIndex === this.targetImageIndex) {
                     this.resetDragImage()
                     return
@@ -206,6 +225,13 @@
                 this.$refs.imageElList.splice(this.targetImageIndex, 0, imageEl)
                 this.$emit("sort", this.dragImageIndex, this.targetImageIndex)
                 this.resetDragImage()
+            },
+            clearDragStartTimer() {
+                if (!this.dragStartTimer) {
+                    return
+                }
+                clearTimeout(this.dragStartTimer)
+                this.dragStartTimer = null
             },
             resetDragImage() {
                 this.dragImageIndex = -1
