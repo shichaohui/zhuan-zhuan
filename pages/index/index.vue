@@ -46,9 +46,7 @@ function filter(dateRange) {
 .filter {
     position: fixed;
     top: 0;
-    /* #ifdef H5 */
-    top: 44px;
-    /* #endif */
+    right: 0;
     left: 0;
     z-index: 1;
     height: 128upx;
@@ -57,6 +55,10 @@ function filter(dateRange) {
     display: flex;
     align-items: center;
     border-bottom: 1upx solid $uni-border-1;
+    
+    .uni-date {
+        width: 100%;
+    }
 }
 
 .growingList {

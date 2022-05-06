@@ -53,7 +53,7 @@ onLoad(options => {
 
 // 初始化
 function init() {
-    if (isVerifiedPassword && initDateRef.value) {
+    if (isVerifiedPassword.value && initDateRef.value) {
         handleSelectDate({ fulldate: initDateRef.value })
     }
 }

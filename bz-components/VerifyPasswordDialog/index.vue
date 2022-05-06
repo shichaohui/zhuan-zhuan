@@ -19,7 +19,7 @@ import verifiedPassword from '@/helpers/verifiedPassword'
 import cloudApi from '@/helpers/cloudApi'
 import toast from '@/utils/toast'
 import sleep from '@/utils/sleep'
-import crypto from '@/node_modules/crypto-js/crypto-js'
+import crypto from '@/utils/crypto'
 
 // 是否已验证密码
 const isVerifiedPassword = verifiedPassword.useVerifiedPassword()
@@ -40,7 +40,7 @@ watch(isVerifiedPassword, newVal => {
 // 关闭弹窗，返回上一页
 async function handleClose() {
     popupRef.value.close()
-    await sleep(200)
+    await sleep(300)
     uni.navigateBack({})
 }
 
