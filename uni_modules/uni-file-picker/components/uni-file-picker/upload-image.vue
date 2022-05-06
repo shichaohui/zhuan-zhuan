@@ -1,20 +1,24 @@
 <template>
-	<view class="uni-file-picker__container" ref="imageListEl">
-		<view class="file-picker__box" v-for="(item,index) in filesList" :key="item.key" :style="boxStyle" ref="imageElList"
-            @touchstart="handleDragImageStart" @touchmove="handleDragImageMove(index, $event)" @touchend="handleDragImageEnd">
+	<view class="uni-file-picker__container">
+		<view class="file-picker__box" v-for="(item,index) in filesList" :key="item.key" :style="boxStyle" @longpress="handleMoveStart(index)">
 			<view class="file-picker__box-content" :style="borderStyle">
 				<image class="file-image" :src="item.url" mode="aspectFill" @click.stop="prviewImage(item,index)"></image>
-				<view v-if="delIcon && !readonly" class="icon-del-box" @click.stop="delFile(index)">
-					<view class="icon-del"></view>
-					<view class="icon-del rotate"></view>
-				</view>
-				<view v-if="(item.progress && item.progress !== 100) ||item.progress===0 " class="file-picker__progress">
-					<progress class="file-picker__progress-item" :percent="item.progress === -1?0:item.progress" stroke-width="4"
-					 :backgroundColor="item.errMsg?'#ff5a5f':'#EBEBEB'" />
-				</view>
-				<view v-if="item.errMsg" class="file-picker__mask" @click.stop="uploadFiles(item,index)">
-					点击重试
-				</view>
+                <view v-if="moveIndex >= 0" class="icon-move-box" @click="handleMove(index)">
+                    <uni-icons type="map-pin-ellipse" size="24" color="#ffffff"></uni-icons>
+                </view>
+                <template v-else>
+                    <view v-if="delIcon && !readonly" class="icon-del-box" @click.stop="delFile(index)">
+                        <view class="icon-del"></view>
+                        <view class="icon-del rotate"></view>
+                    </view>
+                    <view v-if="(item.progress && item.progress !== 100) ||item.progress===0 " class="file-picker__progress">
+                        <progress class="file-picker__progress-item" :percent="item.progress === -1?0:item.progress" stroke-width="4"
+                        :backgroundColor="item.errMsg?'#ff5a5f':'#EBEBEB'" />
+                    </view>
+                    <view v-if="item.errMsg" class="file-picker__mask" @click.stop="uploadFiles(item,index)">
+                        点击重试
+                    </view>
+                </template>
 			</view>
 		</view>
 		<view v-if="filesList.length < limit && !readonly" class="file-picker__box" :style="boxStyle">
@@ -72,11 +76,7 @@
 		},
         data() {
             return {
-                dragStartTimer: null,
-                isDragging: false,
-                dragImageIndex: -1,
-                targetImageIndex: -1,
-                copyDragImageEl: -1
+                moveIndex: -1
             }
         },
 		computed: {
@@ -185,57 +185,12 @@
 				}
 				return value
 			},
-            handleDragImageStart() {
-                this.dragStartTimer = setTimeout(() => {
-                    this.isDragging = true
-                }, 200)
+            handleMoveStart(index) {
+                this.moveIndex = index
             },
-            handleDragImageMove(index, event) {
-                if(!this.isDragging) {
-                    this.clearDragStartTimer()
-                    return
-                }
-                event.stopPropagation();
-                event.preventDefault();
-                const { pageX, pageY, clientX, clientY } = event.touches[0]
-                const targetIndex = this.$refs.imageElList.findIndex((item) => {
-                    const { offsetLeft, offsetTop, clientWidth, clientHeight} = item.$el
-                    return (pageX >= offsetLeft && pageX <= offsetLeft + clientWidth) && (pageY >= offsetTop && pageY <= offsetTop+ clientHeight)
-                })
-                if (targetIndex < 0) {
-                    return
-                }
-                if (this.dragImageIndex < 0) {
-                    this.dragImageIndex = targetIndex
-                }
-                this.targetImageIndex = targetIndex
-            },
-            handleDragImageEnd() {
-                if(!this.isDragging) {
-                    this.clearDragStartTimer()
-                    return
-                }
-                this.isDragging = false
-                if (this.dragImageIndex === this.targetImageIndex) {
-                    this.resetDragImage()
-                    return
-                }
-                const imageEl = this.$refs.imageElList[this.dragImageIndex]
-                this.$refs.imageElList.splice(this.dragImageIndex, 1)
-                this.$refs.imageElList.splice(this.targetImageIndex, 0, imageEl)
-                this.$emit("sort", this.dragImageIndex, this.targetImageIndex)
-                this.resetDragImage()
-            },
-            clearDragStartTimer() {
-                if (!this.dragStartTimer) {
-                    return
-                }
-                clearTimeout(this.dragStartTimer)
-                this.dragStartTimer = null
-            },
-            resetDragImage() {
-                this.dragImageIndex = -1
-                this.targetImageIndex = -1
+            handleMove(index) {
+                this.$emit('sort', this.moveIndex, index)
+                this.moveIndex = -1
             }
 		}
 	}
@@ -274,6 +229,18 @@
 		border-radius: 5px;
 		overflow: hidden;
 	}
+    
+    .icon-move-box {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.25);
+    }
 
 	.file-picker__progress {
 		position: absolute;

@@ -213,7 +213,7 @@
 				let files = []
 				this.files.forEach(v => {
                     if (!v.key) {
-                        v.key = Math.random().toString().replace(".", "")
+                        v.key = this.randomFileKey()
                     }
 					files.push(v)
 				})
@@ -254,6 +254,12 @@
 			}
 		},
 		methods: {
+            /**
+             * 为文件随机生成一个 key
+             */
+            randomFileKey() {
+                return Math.random().toString().replace(".", "")
+            },
 			/**
 			 * 公开用户使用，清空文件
 			 * @param {Object} index
@@ -524,9 +530,17 @@
 				})
 			},
             
+            /**
+             * 调整位置
+             * @param {number} index 原位置
+             * @param {number} targetIndex 新位置
+             */
             sort(index, targetIndex) {
-                const file = this.files[index]
-                this.files.splice(index, 1)
+                const file = this.files.splice(index, 1)[0]
+                // #ifdef APP-PLUS
+                // APP 上要重新生成一个 key，否则 uni-app-view 会报错
+                file.key = this.randomFileKey()
+                // #endif
                 this.files.splice(targetIndex, 0, file)
             },
 
