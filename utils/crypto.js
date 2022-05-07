@@ -1,9 +1,11 @@
 // #ifdef APP-PLUS
 import crypto from "@/node_modules/crypto-js/crypto-js"
+
+export default crypto
 // #endif
 
 // #ifdef H5
-const crypto = window.CryptoJS
-// #endif
+import "@/node_modules/crypto-js/crypto-js"
 
-export default crypto
+export default window.CryptoJS
+// #endif
