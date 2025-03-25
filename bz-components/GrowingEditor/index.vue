@@ -126,9 +126,9 @@ async function varifyForm() {
     if (!form.weight) {
         throw Error('请填写体重')
     }
-    if (form.photoList.length === 0) {
-        throw Error('请上传照片')
-    }
+    // if (form.photoList.length === 0) {
+    //     throw Error('请上传照片')
+    // }
 }
 </script>
 

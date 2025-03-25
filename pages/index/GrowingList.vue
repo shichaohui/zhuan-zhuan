@@ -12,7 +12,8 @@
                     <uni-icons type="compose" />
                 </view>
             </view>
-            <uni-grid class="growingPhotoList" :column="gridColumn" :showBorder="false">
+			<view v-if="growing.photoList.length === 0" class="noPhoto">暂无照片</view>
+            <uni-grid v-else class="growingPhotoList" :column="gridColumn" :showBorder="false">
                 <uni-grid-item v-for="(photo, photoIndex) in growing.photoList" :key="photo">
                     <image
                         class="photo"
@@ -72,7 +73,7 @@ const gridColumn = 3
  */
 const growingListQuery = reactive({
     pageNo: 1,
-    pageSize: 10,
+    pageSize: 12,
     dateStart: null,
     dateEnd: null,
 })
@@ -281,6 +282,11 @@ defineExpose({
         margin-left: 20upx;
         margin-bottom: -4upx;
     }
+}
+
+.noPhoto {
+	margin-top: 10px;
+	color: $uni-secondary-color;
 }
 
 .growingPhotoList {

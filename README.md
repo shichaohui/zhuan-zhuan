@@ -19,5 +19,5 @@ uni-app + uni-ui + uni-cloud + vue3 项目实战
 
 ## Run
 
-1. 运行 `yarn install` 安装依赖。
+1. 运行 `pnpm install` 安装依赖。
 2. 使用 `HBuilderX` 的运行功能启动应用。
