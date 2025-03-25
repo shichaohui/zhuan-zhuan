@@ -171,6 +171,10 @@ async function refresh() {
 async function loadFirstPage() {
     growingListQuery.pageNo = 1
     const list = await cloudApi.getGrowingList(growingListQuery)
+	list.forEach(item => {
+		item.height = parseFloat(item.height).toFixed(1)
+		item.weight = parseFloat(item.weight).toFixed(1)
+	})
     growingList.length = 0
     growingList.push(...list)
 }
