@@ -9,23 +9,24 @@ Vue.prototype.$store = store
 App.mpType = 'app'
 
 const app = new Vue({
-    ...App,
-    store,
+  ...App,
+  store,
 })
 app.$mount()
 // #endif
 
 // #ifdef VUE3
 import {
-    createSSRApp
+  createSSRApp
 } from 'vue'
 import store from '@/store'
 import App from './App.vue'
+
 export function createApp() {
-    const app = createSSRApp(App)
-    app.use(store)
-    return {
-        app,
-    }
+  const app = createSSRApp(App)
+  app.use(store)
+  return {
+    app,
+  }
 }
 // #endif

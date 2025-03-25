@@ -3,19 +3,19 @@ const CODE_ERROR = 40000
 
 /**
  * 格式化请求参数
- * @param {Object} 请求参数
+ * @param {Object} data 请求参数
  */
 function formatRequestData(data?: any) {
-    if (data === null || data === undefined) {
-        return undefined
+  if (data === null || data === undefined) {
+    return undefined
+  }
+  const newData: { [key: string]: any } = {}
+  for (let entry of Object.entries(data)) {
+    if (entry[1] !== null && entry[1] !== undefined) {
+      newData[entry[0]] = entry[1]
     }
-    const newData = {}
-    for (let entry of Object.entries(data)) {
-        if (entry[1] !== null && entry[1] !== undefined) {
-            newData[entry[0]] = entry[1]
-        }
-    }
-    return newData
+  }
+  return newData
 }
 
 /**
@@ -23,31 +23,31 @@ function formatRequestData(data?: any) {
  * @param {String} name 云函数名
  * @param {Object} data 传递给云函数的参数
  */
-async function request(name: string, data?: any) {
-    try {
-        const res = await uniCloud.callFunction({
-            name,
-            data: formatRequestData(data),
-        })
-        const { code, message, data: resData } = res.result
-        if (code === CODE_SUCCESS) {
-            return resData
-        }
-        if (code === CODE_ERROR) {
-            throw Error(message)
-        }
-        throw Error(message)
-    } catch (err) {
-        throw Error(err.message)
+async function request<T>(name: string, data?: any) {
+  try {
+    const res = await uniCloud.callFunction({
+      name,
+      data: formatRequestData(data)
+    })
+    const { code, message, data: resData } = res.result
+    if (code === CODE_SUCCESS) {
+      return resData as T
     }
+    if (code === CODE_ERROR) {
+      throw Error(message)
+    }
+    throw Error(message)
+  } catch (err) {
+    throw Error(err.message)
+  }
 }
 
 /**
  * 添加一条成长记录
  * @param {Zhuan.Growing} growing 成长记录
  */
-async function insertGrowing(growing: Zhuan.Growing) {
-    return await request('insertGrowing', growing)
+function insertGrowing(growing: Zhuan.Growing) {
+  return request('insertGrowing', growing)
 }
 
 /**
@@ -55,16 +55,16 @@ async function insertGrowing(growing: Zhuan.Growing) {
  * @param {String} date 日期
  * @return {Zhuan.Growing} 成长记录
  */
-async function getGrowing(date: string): Zhuan.Growing {
-    return await request('getGrowing', { date })
+function getGrowing(date: string): Promise<Zhuan.Growing> {
+  return request<Zhuan.Growing>('getGrowing', { date })
 }
 
 /**
  * 编辑成长记录
  * @param {Zhuan.Growing} growing 成长记录
  */
-async function updateGrowing(growing: Zhuan.Growing): Zhuan.Growing {
-    return await request('updateGrowing', growing)
+function updateGrowing(growing: Zhuan.Growing): Promise<Zhuan.Growing> {
+  return request<Zhuan.Growing>('updateGrowing', growing)
 }
 
 /**
@@ -75,13 +75,13 @@ async function updateGrowing(growing: Zhuan.Growing): Zhuan.Growing {
  * @param {Number} query.pageNo 页码
  * @return {Zhuan.Growing[]} 成长记录列表
  */
-async function getGrowingList(query: {
-    dateStart?: string
-    dateEnd?: string
-    pageSize?: number
-    pageNo?: number
-}): Zhuan.Growing[] {
-    return await request('getGrowingList', query)
+function getGrowingList(query: {
+  dateStart?: string
+  dateEnd?: string
+  pageSize?: number
+  pageNo?: number
+}): Promise<Zhuan.Growing[]> {
+  return request<Zhuan.Growing[]>('getGrowingList', query)
 }
 
 /**
@@ -92,28 +92,28 @@ async function getGrowingList(query: {
  * @param {Number} query.pageNo 页码
  * @return {Zhuan.GrowingBaseInfo[]} 成长记录列表
  */
-async function getGrowingBaseInfoList(query: {
-    dateStart?: string
-    dateEnd?: string
-    pageSize?: number
-    pageNo?: number
-}): Zhuan.GrowingBaseInfo[] {
-    return await request('getGrowingBaseInfoList', query)
+function getGrowingBaseInfoList(query: {
+  dateStart?: string
+  dateEnd?: string
+  pageSize?: number
+  pageNo?: number
+}): Promise<Zhuan.GrowingBaseInfo[]> {
+  return request<Zhuan.GrowingBaseInfo[]>('getGrowingBaseInfoList', query)
 }
 
 /**
  * 验证密码
- * @param {String} 密码
+ * @param {String} password 密码
  */
-async function verifyPassword(password: string): boolean {
-    return await request('verifyPassword', { password })
+function verifyPassword(password: string): Promise<boolean> {
+  return request<boolean>('verifyPassword', { password })
 }
 
 export default {
-    insertGrowing,
-    getGrowing,
-    updateGrowing,
-    getGrowingList,
-    getGrowingBaseInfoList,
-    verifyPassword,
+  insertGrowing,
+  getGrowing,
+  updateGrowing,
+  getGrowingList,
+  getGrowingBaseInfoList,
+  verifyPassword
 }

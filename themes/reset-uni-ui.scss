@@ -1,41 +1,41 @@
 .uni-datetime-picker--btn {
-    background-color: $uni-primary !important;
+  background-color: $uni-primary !important;
 }
 
 .uni-calendar {
-    .uni-calendar-item__weeks-box-text {
-        color: $uni-base-color !important;
-    }
+  .uni-calendar-item__weeks-box-text {
+    color: $uni-base-color !important;
+  }
 
-    .uni-calendar-item--disable {
-        .uni-calendar-item__weeks-box-text-disable {
-            color: #d1d1d1 !important;
-        }
+  .uni-calendar-item--disable {
+    .uni-calendar-item__weeks-box-text-disable {
+      color: #d1d1d1 !important;
     }
+  }
 
-    .uni-calendar-item--checked,
-    .uni-calendar-item--before-checked,
-    .uni-calendar-item--after-checked {
-        background-color: $uni-primary !important;
+  .uni-calendar-item--checked,
+  .uni-calendar-item--before-checked,
+  .uni-calendar-item--after-checked {
+    background-color: $uni-primary !important;
 
-        .uni-calendar-item--checked-text {
-            color: #fff !important;
-        }
+    .uni-calendar-item--checked-text {
+      color: #fff !important;
     }
+  }
 }
 
 .uni-dialog-button-text {
-    color: $uni-secondary-color !important;
+  color: $uni-secondary-color !important;
 }
 
 .uni-button-color {
-    color: $uni-primary !important;
+  color: $uni-primary !important;
 }
 
 .uni-fab__content {
-    border: 1upx solid $uni-primary !important;
+  border: 1upx solid $uni-primary !important;
 }
 
 .uni-fab__content--other-platform {
-    border-width: 1upx !important;
+  border-width: 1upx !important;
 }

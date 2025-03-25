@@ -14,11 +14,11 @@ type ResizeMode = 'lfit' | 'mfit' | 'fill' | 'pad' | 'fixed'
  * @param {Number} height 目标高度，<= 0 的值表示使用默认高度
  */
 function resize(url: string, width: number = 0, height: number = 0, mode: ResizeMode = 'lfit') {
-    const w = width > 0 ? `w_${width}` : ''
-    const h = height > 0 ? `h_${height}` : ''
-    return `${url}?x-oss-process=image/resize,${w},${h},m_${mode}`
+  const w = width > 0 ? `w_${width}` : ''
+  const h = height > 0 ? `h_${height}` : ''
+  return `${url}?x-oss-process=image/resize,${w},${h},m_${mode}`
 }
 
 export default {
-    resize,
+  resize
 }

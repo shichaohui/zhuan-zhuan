@@ -1,12 +1,12 @@
 <template>
-    <VerifyPasswordDialog v-if="!isVerifiedPassword" />
-    <GrowingEditor v-else :initForm="initForm" :submit="handleSubmitClick" />
+  <VerifyPasswordDialog v-if="!isVerifiedPassword" />
+  <GrowingEditor v-else :initForm="initForm" :submit="handleSubmitClick" />
 </template>
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import GrowingEditor from '@/bz-components/GrowingEditor'
-import VerifyPasswordDialog from '@/bz-components/VerifyPasswordDialog'
+import GrowingEditor from '@/bz-components/GrowingEditor/index.vue'
+import VerifyPasswordDialog from '@/bz-components/VerifyPasswordDialog/index.vue'
 import cloudApi from '@/helpers/cloudApi'
 import event from '@/helpers/event'
 import verifiedPassword from '@/helpers/verifiedPassword'
@@ -17,21 +17,21 @@ const isVerifiedPassword = verifiedPassword.useVerifiedPassword()
 
 // 表单信息
 const initForm = reactive({
-    date: '',
-    height: '',
-    weight: '',
-    description: '',
-    photoList: [],
+  date: '',
+  height: '',
+  weight: '',
+  description: '',
+  photoList: []
 })
 
 // 提交按钮点击处理
-async function handleSubmitClick(form) {
-    const data = {
-        ...form,
-        photoList: form.photoList.map(item => item.url),
-    }
-    await cloudApi.insertGrowing(data)
-    event.addedGrowing.emit(data)
+async function handleSubmitClick(form: any) {
+  const data = {
+    ...form,
+    photoList: form.photoList.map((item: any) => item.url)
+  }
+  await cloudApi.insertGrowing(data)
+  event.addedGrowing.emit(data)
 }
 </script>
 

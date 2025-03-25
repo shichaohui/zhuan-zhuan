@@ -8,10 +8,10 @@ type OnUpdatedGrowingCallBack = (growing: Zhuan.Growing) => void
 
 /**
  * 发出更新了成长记录的事件
- * @param {Zhuan.Growing} 成长记录
+ * @param {Zhuan.Growing} growing 成长记录
  */
 function emit(growing: Zhuan.Growing) {
-    uni.$emit(UPDATED_GROWING, growing)
+  uni.$emit(UPDATED_GROWING, growing)
 }
 
 /**
@@ -19,7 +19,7 @@ function emit(growing: Zhuan.Growing) {
  * @param {OnAddedGrowingCallBack} callback 回调函数
  */
 function on(callback: OnUpdatedGrowingCallBack) {
-    uni.$on(UPDATED_GROWING, callback)
+  uni.$on(UPDATED_GROWING, callback)
 }
 
 /**
@@ -27,11 +27,11 @@ function on(callback: OnUpdatedGrowingCallBack) {
  * @param {OnAddedGrowingCallBack} callback 回调函数
  */
 function off(callback?: OnUpdatedGrowingCallBack) {
-    uni.$off(UPDATED_GROWING, callback)
+  uni.$off(UPDATED_GROWING, callback)
 }
 
 export default {
-    emit,
-    on,
-    off,
+  emit,
+  on,
+  off
 }

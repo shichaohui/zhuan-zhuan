@@ -10,11 +10,11 @@ const STORAGE_KEY = 'abandonPhotoIdList'
  * @param {Array<String>} ids 照片 id 列表
  */
 async function add(ids: string[]) {
-    if ((ids || []).length === 0) {
-        return
-    }
-    const list = uni.getStorageSync(STORAGE_KEY) || []
-    uni.setStorageSync(STORAGE_KEY, [...list, ...ids])
+  if ((ids || []).length === 0) {
+    return
+  }
+  const list: string[] = uni.getStorageSync(STORAGE_KEY) || []
+  uni.setStorageSync(STORAGE_KEY, [...list, ...ids])
 }
 
 /**
@@ -22,34 +22,37 @@ async function add(ids: string[]) {
  * @param {Array<String>} ids 照片 id 列表
  */
 async function remove(ids: string[]) {
-    if ((ids || []).length === 0) {
-        return
-    }
-    const list = uni.getStorageSync(STORAGE_KEY) || []
-    uni.setStorageSync(STORAGE_KEY, list.filter(item => !ids.includes(item)))
+  if ((ids || []).length === 0) {
+    return
+  }
+  const list: string[] = uni.getStorageSync(STORAGE_KEY) || []
+  uni.setStorageSync(
+    STORAGE_KEY,
+    list.filter((item) => !ids.includes(item))
+  )
 }
 
 /**
  * 提交弃用照片操作到服务器
  */
 async function submit() {
-    const list = uni.getStorageSync(STORAGE_KEY)
-    if ((list || []).length === 0) {
-        return
+  const list: string[] = uni.getStorageSync(STORAGE_KEY) || []
+  if (list.length === 0) {
+    return
+  }
+  try {
+    await cloudFile.remove([...new Set(list)])
+    uni.removeStorageSync(STORAGE_KEY)
+  } catch (err) {
+    // 报“指定 id 不存在”错误时，存在的 id 会正常删除，所以直接清理
+    if (err.message === 'The specified Id does not exist.') {
+      uni.removeStorageSync(STORAGE_KEY)
     }
-    try {
-        await cloudFile.remove([...new Set(list)])
-        uni.removeStorageSync(STORAGE_KEY)
-    } catch (err) {
-        // 报“指定 id 不存在”错误时，存在的 id 会正常删除，所以直接清理
-        if (err.message === 'The specified Id does not exist.') {
-            uni.removeStorageSync(STORAGE_KEY)
-        }
-    }
+  }
 }
 
 export default {
-    add,
-    remove,
-    submit,
+  add,
+  remove,
+  submit
 }
