@@ -1,6 +1,6 @@
 <template>
   <view class="page fullPage curvePage">
-    <qiun-data-charts type="area" :loadingType="4" :opts="options" :chartData="chartData" />
+    <qiun-data-charts type="line" :loadingType="4" :opts="options" :chartData="chartData" />
   </view>
 </template>
 
@@ -9,6 +9,7 @@ import { reactive } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import cloudApi from '@/helpers/cloudApi'
 import themeConstants from '@/themes/constants'
+import { calcStandardHeightList, calcStandardWeightList } from './standard-data'
 
 // 图标配置
 const options = {
@@ -22,22 +23,17 @@ const options = {
     labelCount: 12 // x轴显示标签个数
   },
   dataLabel: false, // 是否显示数据
-  dataPointShape: false, // 是否显示圆点
-  extra: {
-    area: {
-      gradient: true // 开启渐变色
-    }
-  }
+  dataPointShape: false // 是否显示圆点
 }
 
 // 图表数据
 const chartData = reactive({
   categories: [] as string[],
-  series: [] as { name: string; data: string[] }[]
+  series: [] as { name: string; data: string[]; color: string }[]
 })
 
 // 初始化
-async function init() {
+async function initChart() {
   const list = await cloudApi.getGrowingBaseInfoList({ pageSize: 9999 })
   const dateList: string[] = []
   const heightList: string[] = []
@@ -50,17 +46,29 @@ async function init() {
   chartData.categories.push(...dateList)
   chartData.series.push({
     name: '身高(cm)',
-    data: heightList
+    data: heightList,
+    color: '#ffaa30'
+  })
+  chartData.series.push({
+    name: '标准身高(cm)',
+    data: calcStandardHeightList(dateList).map(String),
+    color: '#ffebc8'  
   })
   chartData.series.push({
     name: '体重(kg)',
-    data: weightList
+    data: weightList,
+    color: '#ff1924'
+  })
+  chartData.series.push({
+    name: '标准体重(kg)',
+    data: calcStandardWeightList(dateList).map(String),
+    color: '#ffc5c6'
   })
 }
 
 // 页面加载完成
 onLoad(async () => {
-  await init()
+  await initChart()
 })
 </script>
 
